@@ -15,7 +15,16 @@ namespace Simulation.Base
 
         protected override void StartView()
         {
+            ViewData.SimAreaSize.OnChanged += SetCameraDistance;
             _ready = true;
+        }
+
+        private void SetCameraDistance(Vector2 size)
+        {
+            // TODO: переделать чтобы камера вращалась на тап и подстравивалась под размер на экране
+            var camLocPos = _cameraTrans.localPosition;
+            camLocPos.z = -Mathf.Max(size.x, size.y);
+            _cameraTrans.localPosition = camLocPos;
         }
 
         private void Update()

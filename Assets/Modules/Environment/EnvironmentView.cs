@@ -23,7 +23,7 @@ namespace Simulation.Modules
             _areaBones[2].localPosition = -_areaBones[0].localPosition;
             _areaBones[3].localPosition = -_areaBones[1].localPosition;
 
-            _meshRenderer.localBounds = new Bounds(_meshRenderer.localBounds.center, new Vector3(size.x, 1f, size.y));
+            _meshRenderer.localBounds = new Bounds(new Vector3(-size.x/2f, 0f, size.y / 2f), new Vector3(size.x, 1f, size.y));
         }
     }
 }

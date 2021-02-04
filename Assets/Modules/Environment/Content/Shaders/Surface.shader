@@ -56,8 +56,6 @@ Shader "Custom/Surface"
 
             float4 frag(v2f i) : SV_Target
             {
-                float4 color = 0.;
-
                 float2 uvd = i.uv * 10000 / _GridSize;
                 uvd = frac(uvd) - 0.5;
 
@@ -70,17 +68,15 @@ Shader "Custom/Surface"
                 float wmask = 0.7 + sin(_Time.z - length(i.uv) * 20.) * 0.7;
 
                 // lines
-                float lines = smoothstep(0.48, 0.5, abs(uvd.x));
-                lines += smoothstep(0.48, 0.5, abs(uvd.y));
+                float lines = smoothstep(0.4, 0.5, abs(uvd.x));
+                lines += smoothstep(0.4, 0.5, abs(uvd.y));
                 lines += 0.5 * wmask * length(uvd.x);
 
                 // dots
                 uvd = ((0.5 + (uvd + 0.5)) % 1) - 0.5;
                 float dots = smoothstep(0.1, 0.05, length(uvd));
 
-                color += dmask * lerp(_DotsColor, _LinesColor, wmask) * (dots + lines * wmask);
-
-                return color;
+                return dmask * lerp(_DotsColor, _LinesColor, wmask) * (dots + lines * wmask);
             }
             ENDCG
         }
