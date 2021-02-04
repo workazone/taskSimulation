@@ -6,20 +6,20 @@ using UnityEngine;
 
 namespace Simulation.Modules
 {
-    public class CameraControl: IBindableControl<ICameraType>, ICameraViewType
+    public class EnvironmentControl : IBindableControl<IEnvironmentType>, IEnvironmentViewType
     {
-        private ICameraType _controlType;
+        public event DisposeHandler OnDispose;
+        public NotifiableProp<Vector2> SimAreaSize { get; private set; } = new NotifiableProp<Vector2>();
+
         private IModuleProvider _provider;
         private IDisposable _registerDisposer = default;
+        private IEnvironmentType _controlType = new EnvironmentData();
         private bool _binded = default;
-
-        public NotifiableProp<Vector2> SimAreaSize { get; }  = new NotifiableProp<Vector2>();
-        public event DisposeHandler OnDispose;
 
         public bool TryRegisterTo(IModuleProvider provider)
         {
             _provider = provider;
-            _registerDisposer = provider.RegisterControl<ICameraType>(this, _controlType, this);
+            _registerDisposer = provider.RegisterControl<IEnvironmentType>(this, _controlType, this);
 
             return _registerDisposer != null;
         }
@@ -52,4 +52,3 @@ namespace Simulation.Modules
         }
     }
 }
-

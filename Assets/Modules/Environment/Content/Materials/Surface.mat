@@ -23,7 +23,8 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 2, y: 2}
         m_Offset: {x: -1, y: -1}
-    m_Floats: []
+    m_Floats:
+    - _GridSize: 50
     m_Colors:
     - _DotsColor: {r: 0.49, g: 0, b: 0.66, a: 0.37254903}
     - _LinesColor: {r: 0.4392157, g: 0.70150816, b: 0.90588236, a: 0.5882353}

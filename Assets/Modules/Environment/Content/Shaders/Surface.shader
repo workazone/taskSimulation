@@ -4,8 +4,9 @@ Shader "Custom/Surface"
 {
     Properties
     {
-        _LinesColor ("Lines colot", Color) = (0.49, 0., 0.66, 1.)
-        _DotsColor ("Dots colot", Color) = (0.49, 0., 0.66, 1.)
+        _LinesColor ("Lines color", Color) = (0.49, 0., 0.66, 1.)
+        _DotsColor ("Dots color", Color) = (0.49, 0., 0.66, 1.)
+        _GridSize ("Grid Size", Float) = 10
         _UVTrans ("UV transform", Vector) = (1, 1, 0, 0)
     }
     SubShader
@@ -41,9 +42,10 @@ Shader "Custom/Surface"
 
             float4 _LinesColor;
             float4 _DotsColor;
+            float _GridSize;
             float4 _UVTrans;
 
-            v2f vert (appdata v)
+            v2f vert(appdata v)
             {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
@@ -51,12 +53,12 @@ Shader "Custom/Surface"
                 return o;
             }
 
-      
-            float4 frag (v2f i) : SV_Target
+
+            float4 frag(v2f i) : SV_Target
             {
                 float4 color = 0.;
 
-                float2 uvd = i.uv * 500.0 ;
+                float2 uvd = i.uv * 10000 / _GridSize;
                 uvd = frac(uvd) - 0.5;
 
                 // distance mask
@@ -68,18 +70,16 @@ Shader "Custom/Surface"
                 float wmask = 0.7 + sin(_Time.z - length(i.uv) * 20.) * 0.7;
 
                 // lines
-                float lines = smoothstep( 0.48, 0.5, abs(uvd.x));
-                lines += smoothstep( 0.48, 0.5, abs(uvd.y));
+                float lines = smoothstep(0.48, 0.5, abs(uvd.x));
+                lines += smoothstep(0.48, 0.5, abs(uvd.y));
                 lines += 0.5 * wmask * length(uvd.x);
 
                 // dots
                 uvd = ((0.5 + (uvd + 0.5)) % 1) - 0.5;
-                float dots = smoothstep( 0.1, 0.05, length(uvd));                     
+                float dots = smoothstep(0.1, 0.05, length(uvd));
 
+                color += dmask * lerp(_DotsColor, _LinesColor, wmask) * (dots + lines * wmask);
 
-
-                color += dmask *  lerp(_DotsColor, _LinesColor, wmask) * (dots + lines * wmask);
-                
                 return color;
             }
             ENDCG

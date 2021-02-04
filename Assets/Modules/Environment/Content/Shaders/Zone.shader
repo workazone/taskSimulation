@@ -77,7 +77,7 @@ Shader "Custom/Zone"
                 return 1.-smoothstep(0.00,0.01,abs(c));
             }
 
-            fixed4 frag (v2f i) : SV_Target
+            float4 frag (v2f i) : SV_Target
             {
 	            float2 s = 0.1;
                 float w = 0.01;
