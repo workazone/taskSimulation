@@ -65,7 +65,7 @@ Shader "Custom/Surface"
                 dmask *= dmask;
 
                 // wave mask
-                float wmask = 0.7 + sin(_Time.z - length(i.uv) * 20.) * 0.7;
+                float wmask = 0.5 + sin(_Time.z - length(i.uv) * 20.) * 0.4;
 
                 // lines
                 float lines = smoothstep(0.4, 0.5, abs(uvd.x));

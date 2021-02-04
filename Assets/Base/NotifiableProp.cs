@@ -9,6 +9,7 @@ namespace Simulation.Base
         protected T _value;
         protected event OnChangedEventHandler _onChanged;
         protected object objectLock = new Object();
+        private bool _ready = default;
 
         public event OnChangedEventHandler OnChanged
         {
@@ -18,7 +19,8 @@ namespace Simulation.Base
                 {
                     _onChanged += value;
 
-                    value.Invoke(_value);
+                    if(_ready)
+                        value.Invoke(_value);
                 }
             }
             remove
@@ -38,6 +40,7 @@ namespace Simulation.Base
             {
                 if (!_value.Equals(value))
                 {
+                    _ready = true;
                     _value = value;
                     _onChanged?.Invoke(_value);
                 }

@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b5f55b03761a8b43982f3264b3ad573, type: 3}
+  m_Name: SwarmModule
+  m_EditorClassIdentifier: 
+  _viewPrefab: {fileID: 7172407568378267073, guid: 33a4a9a6709ad8148b985d57d421c8ab,
+    type: 3}

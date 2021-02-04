@@ -9,12 +9,13 @@ namespace Simulation.Modules
     public class EnvironmentControl : IBindableControl<IEnvironmentType>, IEnvironmentViewType
     {
         public event DisposeHandler OnDispose;
-        public NotifiableProp<Vector2> SimAreaSize { get; private set; } = new NotifiableProp<Vector2>();
 
         private IModuleProvider _provider;
         private IDisposable _registerDisposer = default;
         private IEnvironmentType _controlType = new EnvironmentData();
         private bool _binded = default;
+
+        public NotifiableProp<Vector2> SimAreaSize { get; private set; } = new NotifiableProp<Vector2>();
 
         public bool TryRegisterTo(IModuleProvider provider)
         {

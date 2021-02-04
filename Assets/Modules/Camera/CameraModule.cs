@@ -15,6 +15,11 @@ namespace Simulation.Modules
         NotifiableProp<Vector2> SimAreaSize { get; }
     }
 
+    public class CameraData : ICameraType
+    {
+        public Action Activate { get; set; }
+    }
+
     [CreateAssetMenu(fileName = "CameraModule", menuName = "ScriptableObjects/CameraModule", order = 13)]
     public class CameraModule : ModuleOfType<CameraControl, ICameraType>
     {

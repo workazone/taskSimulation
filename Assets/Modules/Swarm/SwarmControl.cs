@@ -6,20 +6,21 @@ using UnityEngine;
 
 namespace Simulation.Modules
 {
-    public class CameraControl: IBindableControl<ICameraType>, ICameraViewType
+    public class SwarmControl : IBindableControl<ISwarmType>, ISwarmViewType
     {
-        private ICameraType _controlType = new CameraData();
+        public event DisposeHandler OnDispose;
+
         private IModuleProvider _provider;
         private IDisposable _registerDisposer = default;
+        private ISwarmType _controlType = new SwarmData();
         private bool _binded = default;
 
-        public NotifiableProp<Vector2> SimAreaSize { get; }  = new NotifiableProp<Vector2>();
-        public event DisposeHandler OnDispose;
+        public NotifiableProp<SimConfig> Config { get; } = new NotifiableProp<SimConfig>();
 
         public bool TryRegisterTo(IModuleProvider provider)
         {
             _provider = provider;
-            _registerDisposer = provider.RegisterControl<ICameraType>(this, _controlType, this);
+            _registerDisposer = provider.RegisterControl<ISwarmType>(this, _controlType, this);
 
             return _registerDisposer != null;
         }
@@ -32,7 +33,7 @@ namespace Simulation.Modules
             CheckBindings(config);
 
             config.Activate();
-            config.Config.OnChanged += cfg => SimAreaSize.Value = new Vector2(cfg.gameAreaWidth, cfg.gameAreaHeight);
+            config.Config.OnChanged += cfg => Config.Value = cfg;
 
             _binded = true;
         }
@@ -52,4 +53,3 @@ namespace Simulation.Modules
         }
     }
 }
-

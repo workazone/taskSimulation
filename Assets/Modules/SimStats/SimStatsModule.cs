@@ -5,30 +5,33 @@ using UnityEngine;
 
 namespace Simulation.Modules
 {
-    public enum SimState
+    public enum SimStateType
     {
         None,
-        Warming,
-        Idle,
-        Generation,
-        Simualtion
-    }
-
-    public struct SimStatsData
-    {
-        public SimState Current;
-        public SimState Previous;
-
-        public SimStatsData(SimState current, SimState previous)
-        {
-            Current = current;
-            Previous = previous;
-        }
+        Spawning,
+        Moving
     }
 
     public interface ISimStatsType : IControlType
     {
-        NotifiableProp<SimStatsData> Data { get; }
+        NotifiableProp<SimStateType> State { get; }
+    }
+
+    public interface ISimStataViewData : IViewType
+    {
+
+    }
+
+    public class SimStatsData : ISimStatsType
+    {
+        private NotifiableProp<SimStateType> _state = new NotifiableProp<SimStateType>();
+
+        public NotifiableProp<SimStateType> State
+        {
+            get { return _state; }
+        }
+
+        public Action Activate { get; set; }
     }
 
     [CreateAssetMenu(fileName = "SimStatsModule", menuName = "ScriptableObjects/SimStatsModule", order = 14)]
