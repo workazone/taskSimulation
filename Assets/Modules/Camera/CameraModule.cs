@@ -17,7 +17,6 @@ namespace Simulation.Modules
 
     public class CameraData : ICameraType
     {
-        public Action Activate { get; set; }
     }
 
     [CreateAssetMenu(fileName = "CameraModule", menuName = "ScriptableObjects/CameraModule", order = 13)]

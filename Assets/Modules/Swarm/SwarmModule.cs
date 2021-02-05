@@ -13,11 +13,11 @@ namespace Simulation.Modules
     public interface ISwarmViewType : IViewType
     {
         NotifiableProp<SimConfig> Config { get; }
+        NotifiableProp<SimStateType> State { get; }
     }
 
     public class SwarmData : ISwarmType
     {
-        public Action Activate { get; set; }
     }
 
     [CreateAssetMenu(fileName = "SwarmModule", menuName = "ScriptableObjects/SwarmModule", order = 15)]

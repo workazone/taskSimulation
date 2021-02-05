@@ -15,6 +15,7 @@ namespace Simulation.Modules
         private IModuleProvider _provider;
         private IDisposable _registerDisposer = default;
         private ISimConfigType _controlType = new SimConfigData();
+        private NotifiableProp<SimStateType> _publicState;
         private bool _binded = default;
         private bool _activated = default;
 
@@ -26,19 +27,29 @@ namespace Simulation.Modules
             return _registerDisposer != null;
         }
 
-        public void Bind()
+        public void Bind(ISimStatsType simStats)
         {
             if (_binded)
                 return;
 
-            _controlType.Activate += ActivateOnDemand;
+            CheckBindings(simStats);
+
+            _publicState = simStats.State;
+
+            _publicState.OnChanged += ActivateOnState;
 
             _binded = true;
         }
 
-        private void ActivateOnDemand()
+        private void CheckBindings(ISimStatsType simStats)
         {
-            if (_activated)
+            if (simStats == null)
+                throw new NullReferenceException(nameof(ISimStatsType));
+        }
+
+        private void ActivateOnState(SimStateType state)
+        {
+            if (_activated || state != SimStateType.Configurate)
                 return;
 
             LoadConfig();
@@ -60,6 +71,9 @@ namespace Simulation.Modules
 
             var text = File.ReadAllText(path);
             _controlType.Config.Value = SimConfig.FromJson(text);
+
+            _publicState.OnChanged -= ActivateOnState;
+            _publicState.Value = SimStateType.Setup;
         }
 
         public void Dispose()

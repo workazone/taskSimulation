@@ -19,7 +19,6 @@ namespace Simulation.Modules
 
     public class EnvironmentData : IEnvironmentType
     {
-        public Action Activate { get; set; }
     }
 
     [CreateAssetMenu(fileName = "EnvironmentModule", menuName = "ScriptableObjects/EnvironmentModule", order = 12)]

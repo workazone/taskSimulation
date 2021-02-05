@@ -6,14 +6,15 @@ using UnityEngine;
 
 namespace Simulation.Modules
 {
-    public class CameraControl: IBindableControl<ICameraType>, ICameraViewType
+    public class CameraControl : IBindableControl<ICameraType>, ICameraViewType
     {
         private ICameraType _controlType = new CameraData();
         private IModuleProvider _provider;
         private IDisposable _registerDisposer = default;
+        private Vector2 _simAreaSize;
         private bool _binded = default;
 
-        public NotifiableProp<Vector2> SimAreaSize { get; }  = new NotifiableProp<Vector2>();
+        public NotifiableProp<Vector2> SimAreaSize { get; } = new NotifiableProp<Vector2>();
         public event DisposeHandler OnDispose;
 
         public bool TryRegisterTo(IModuleProvider provider)
@@ -24,21 +25,29 @@ namespace Simulation.Modules
             return _registerDisposer != null;
         }
 
-        public void Bind(ISimConfigType config)
+        public void Bind(ISimStatsType stats, ISimConfigType config)
         {
             if (_binded)
                 return;
 
-            CheckBindings(config);
+            CheckBindings(stats, config);
 
-            config.Activate();
-            config.Config.OnChanged += cfg => SimAreaSize.Value = new Vector2(cfg.gameAreaWidth, cfg.gameAreaHeight);
+            config.Config.OnChanged += cfg => _simAreaSize = new Vector2(cfg.gameAreaWidth, cfg.gameAreaHeight);
+            stats.State.OnChanged += SetupOnState;
 
             _binded = true;
         }
 
-        private void CheckBindings(ISimConfigType config)
+        private void SetupOnState(SimStateType state)
         {
+            if (state == SimStateType.Setup)
+                SimAreaSize.Value = _simAreaSize;
+        }
+
+        private void CheckBindings(ISimStatsType stats, ISimConfigType config)
+        {
+            if (stats == null)
+                throw new NullReferenceException(nameof(ISimStatsType));
             if (config == null)
                 throw new NullReferenceException(nameof(ISimConfigType));
         }
@@ -52,4 +61,3 @@ namespace Simulation.Modules
         }
     }
 }
-

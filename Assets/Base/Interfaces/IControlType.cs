@@ -6,6 +6,5 @@ namespace Simulation.Base
 {
     public interface IControlType
     {
-        Action Activate { get; set; }
     }
 }

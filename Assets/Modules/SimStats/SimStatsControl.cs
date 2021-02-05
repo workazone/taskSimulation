@@ -23,24 +23,14 @@ namespace Simulation.Modules
             return _registerDisposer != null;
         }
 
-        public void Bind(ISimConfigType config, ISwarmType swarmType)
+        public void Bind()
         {
             if (_binded)
                 return;
 
-            CheckBindings(config, swarmType);
-
-            config.Activate();
+            _controlType.State.Value = SimStateType.Configurate;
 
             _binded = true;
-        }
-
-        private void CheckBindings(ISimConfigType config, ISwarmType swarmType)
-        {
-            if (config == null)
-                throw new NullReferenceException(nameof(ISimConfigType));
-            if (swarmType == null)
-                throw new NullReferenceException(nameof(ISwarmType));
         }
 
         public void Dispose()

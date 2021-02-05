@@ -8,6 +8,8 @@ namespace Simulation.Modules
     public enum SimStateType
     {
         None,
+        Configurate,
+        Setup,
         Spawning,
         Moving
     }
@@ -30,8 +32,6 @@ namespace Simulation.Modules
         {
             get { return _state; }
         }
-
-        public Action Activate { get; set; }
     }
 
     [CreateAssetMenu(fileName = "SimStatsModule", menuName = "ScriptableObjects/SimStatsModule", order = 14)]

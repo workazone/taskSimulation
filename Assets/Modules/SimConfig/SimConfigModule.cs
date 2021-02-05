@@ -18,8 +18,6 @@ namespace Simulation.Modules
         {
             get { return _config; }
         }
-
-        public Action Activate { get; set; }
     }
 
     [CreateAssetMenu(fileName = "SimConfigModule", menuName = "ScriptableObjects/SimConfigModule", order = 11)]
