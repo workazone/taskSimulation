@@ -17,8 +17,8 @@ namespace Simulation.Modules
         private SimConfig _config;
         private bool _binded = default;
 
-        public NotifiableProp<SimConfig> Config { get; } = new NotifiableProp<SimConfig>();
-        public NotifiableProp<SimStateType> State { get; } = new NotifiableProp<SimStateType>();
+        public NotifiableProp<SimConfig> ViewConfig { get; } = new NotifiableProp<SimConfig>();
+        public NotifiableProp<SimStateType> ViewState { get; } = new NotifiableProp<SimStateType>();
 
         public bool TryRegisterTo(IModuleProvider provider)
         {
@@ -35,10 +35,11 @@ namespace Simulation.Modules
 
             CheckBindings(stats, config);
 
-            _publicState = stats.State;
-
             config.Config.OnChanged += cfg => _config = cfg;
             stats.State.OnChanged += OnPublicStateChanged;
+            ViewState.OnChanged += OnViewStateChanged;
+
+            _publicState = stats.State;
 
             _binded = true;
         }
@@ -48,10 +49,11 @@ namespace Simulation.Modules
             switch (state)
             {
                 case SimStateType.Setup:
-                    Config.Value = _config;
-                    State.Value = state;
+                    ViewConfig.Value = _config;
+                    ViewState.Value = state;
                     break;
                 case SimStateType.Spawning:
+                    ViewState.Value = state;
                     break;
                 case SimStateType.Moving:
                     break;
@@ -65,6 +67,7 @@ namespace Simulation.Modules
             switch (stateReady)
             {
                 case SimStateType.Spawning:
+                    _publicState.Value = SimStateType.Spawning;
                     break;
                 case SimStateType.Moving:
                     break;

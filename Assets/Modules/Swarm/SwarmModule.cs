@@ -12,8 +12,8 @@ namespace Simulation.Modules
 
     public interface ISwarmViewType : IViewType
     {
-        NotifiableProp<SimConfig> Config { get; }
-        NotifiableProp<SimStateType> State { get; }
+        NotifiableProp<SimConfig> ViewConfig { get; }
+        NotifiableProp<SimStateType> ViewState { get; }
     }
 
     public class SwarmData : ISwarmType

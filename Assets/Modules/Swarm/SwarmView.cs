@@ -16,21 +16,24 @@ namespace Simulation.Modules
     {
         [SerializeField] private GameObject _unitPrefab;
         [SerializeField] private GameObject _cellPrefab;
-        [SerializeField] private CellGridJobSystem _gridJobSystem;
+        [SerializeField] private CellSplitSystem _splitSystem;
 
         private SimConfig _config;
         private EntityManager _entityManager;
-        private CellGridJobSystem _cellGridJobSystem;
+        private CellSplitSystem _cellSplitSystem;
+        private CellDestroySystem _cellDestroyJobSystem;
+        private CellFitBordersSystem _cellFitBordersSystem;
         private Entity _unitEntityPrefab;
         private Entity _cellEntityPrefab;
         private SimStateType _state = SimStateType.None;
+        private int _fitGridEmptyFrames = default;
         private bool _setupComplete = default;
         private int _createdCount = 0;
 
         protected override void StartView()
         {
-            ViewData.Config.OnChanged += cfg => _config = cfg;
-            ViewData.State.OnChanged += state => _state = state;
+            ViewData.ViewConfig.OnChanged += cfg => _config = cfg;
+            ViewData.ViewState.OnChanged += state => _state = state;
         }
 
         private void Update()
@@ -39,6 +42,13 @@ namespace Simulation.Modules
             {
                 case SimStateType.Setup:
                     SetupSystems();
+                    _fitGridEmptyFrames += _cellFitBordersSystem.ShouldRunSystem() ? -_fitGridEmptyFrames : 1;
+                    if (_fitGridEmptyFrames > 3)
+                    {
+                        Debug.Log($"arrangement compelete!");
+                        ViewData.ViewState.Value = SimStateType.Spawning;
+                        _cellFitBordersSystem.Enabled = false;
+                    }
                     break;
                 case SimStateType.Spawning:
                     ProcessSpawning();
@@ -53,7 +63,7 @@ namespace Simulation.Modules
 
         private void SetupSystems()
         {
-            if(_setupComplete)
+            if (_setupComplete)
                 return;
 
             var radius = UnityEngine.Random.Range(_config.unitSpawnMinRadius, _config.unitSpawnMaxRadius);
@@ -64,9 +74,15 @@ namespace Simulation.Modules
 
             var maxSide = Mathf.Max(width, height);
 
+            var borders = new float4(-width / 2f, width / 2f, -height / 2f, height / 2f);
+
             // system
-            _cellGridJobSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<CellGridJobSystem>();
-            _cellGridJobSystem.Borders = new float4(-width / 2f, width / 2f, -height / 2f, height / 2f);
+            _cellFitBordersSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<CellFitBordersSystem>();
+            _cellSplitSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<CellSplitSystem>();
+            _cellDestroyJobSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<CellDestroySystem>();
+            _cellFitBordersSystem.Borders = borders;
+            _cellSplitSystem.Borders = borders;
+            _cellDestroyJobSystem.Borders = borders;
 
             //
             _entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
@@ -80,11 +96,9 @@ namespace Simulation.Modules
             _entityManager.SetComponentData(entity, new Translation {Value = new float3(0f, 0.7f, 0f)});
             _entityManager.SetComponentData(entity, new Rotation {Value = quaternion.identity});
             _entityManager.SetComponentData(entity, new NonUniformScale() {Value = maxSide / 2f});
-            _entityManager.SetComponentData(entity, new CellComponent(float3.zero, maxSide / 2f));
+            _entityManager.SetComponentData(entity, new CellComponent(new float3(0f, 0.7f, 0f), maxSide / 2f));
 
             _setupComplete = true;
-
-            ViewData.State.Value = SimStateType.Spawning;
         }
 
         private void ProcessSpawning()

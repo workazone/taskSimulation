@@ -1,17 +1,25 @@
 ﻿using Unity.Entities;
 using Unity.Mathematics;
 
-[GenerateAuthoringComponent]
-public struct CellComponent : IComponentData
+namespace Simulation.Modules
 {
-    public float Size;
-    public float3 Position;
-    public float4 Edges;  // x,y,z,w => left, right, bottom, top
-
-    public CellComponent(float3 pos, float halfSize)
+    [GenerateAuthoringComponent]
+    public struct CellComponent : IComponentData
     {
-        Position = pos;
-        Size = 2f * halfSize;
-        Edges = new float4(pos.x - halfSize, pos.x + halfSize, pos.y - halfSize, pos.y + halfSize);
+        public float4 Borders;
+
+        public CellComponent(float4 borders)
+        {
+            Borders = borders;
+        }
+
+        public CellComponent(float3 posiiton, float3 scale)
+        {
+            Borders = new float4(
+                posiiton.x - scale.x,
+                posiiton.x + scale.x,
+                posiiton.y - scale.y,
+                posiiton.y + scale.y);
+        }
     }
 }
