@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Cell
+  m_Name: UnitRed
   m_Shader: {fileID: 4800000, guid: 16c5a9d3f83e7ff45a42aa0d6c5bb0a5, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -40,7 +40,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: d840d1cc3a75f6348be34adb349773b7, type: 3}
+        m_Texture: {fileID: 2800000, guid: 50d28fcc45b7da34ea57c7bd38c0369f, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -75,4 +75,4 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _MainColor: {r: 0.3686275, g: 0.81960785, b: 0.81009257, a: 1}
+    - _MainColor: {r: 1, g: 0.30875486, b: 0.23137254, a: 1}

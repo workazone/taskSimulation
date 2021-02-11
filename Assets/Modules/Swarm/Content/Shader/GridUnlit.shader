@@ -1,4 +1,4 @@
-﻿Shader "Custom/Cell"
+﻿Shader "Custom/GridUnlit"
 {
     Properties
     {

@@ -14,9 +14,6 @@ namespace Simulation.Modules
     [BurstCompile]
     public class CellSplitSystem : JobComponentSystem
     {
-        // x,y,z,w => left, right, bottom, top
-        public float4 Borders;
-
         private EndSimulationEntityCommandBufferSystem _endSimEcbSystem;
 
         protected override void OnCreate()
@@ -25,25 +22,15 @@ namespace Simulation.Modules
                 .GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
         }
 
-        public static void SpawnCell(int entityInQueryIndex, Entity entity, EntityCommandBuffer.Concurrent commandBuffer, float3 scale, float3 posiiton)
+        public static void SpawnCell(int entityInQueryIndex, Entity entity, EntityCommandBuffer.Concurrent commandBuffer, float3 positon, float3 scale)
         {
             Entity cellEntity = commandBuffer.Instantiate(entityInQueryIndex, entity);
-
-            float4 cellBorders = new float4(
-                posiiton.x - scale.x,
-                posiiton.x + scale.x,
-                posiiton.y - scale.y,
-                posiiton.y + scale.y);
-
-            commandBuffer.SetComponent(entityInQueryIndex, cellEntity, new Translation() {Value = posiiton});
-            commandBuffer.SetComponent(entityInQueryIndex, cellEntity, new CellComponent() {Borders = cellBorders});
-            // commandBuffer.RemoveComponent<SplitTag>(entityInQueryIndex, spawned);
-            // commandBuffer.AddComponent<DirtyTag>(entityInQueryIndex, spawned);
+            commandBuffer.SetComponent(entityInQueryIndex, cellEntity, new Translation() {Value = positon});
+            commandBuffer.SetComponent(entityInQueryIndex, cellEntity, new CellComponent(positon, scale));
         }
 
         protected override JobHandle OnUpdate(JobHandle inputDeps)
         {
-            var borders = Borders;
             var commandBuffer = _endSimEcbSystem.CreateCommandBuffer().ToConcurrent();
 
             // split job
@@ -60,9 +47,9 @@ namespace Simulation.Modules
 
                     // нагенерить 3 новых ячейки
                     // справа снизу
-                    SpawnCell(entityInQueryIndex, entity, commandBuffer, scale.Value, new float3(translation.Value.x, translation.Value.y, translation.Value.z - 2f * scale.Value.z));
-                    SpawnCell(entityInQueryIndex, entity, commandBuffer, scale.Value, new float3(translation.Value.x - 2f * scale.Value.x, translation.Value.y, translation.Value.z - 2f * scale.Value.z));
-                    SpawnCell(entityInQueryIndex, entity, commandBuffer, scale.Value, new float3(translation.Value.x - 2f * scale.Value.x, translation.Value.y, translation.Value.z));
+                    SpawnCell(entityInQueryIndex, entity, commandBuffer, new float3(translation.Value.x, translation.Value.y, translation.Value.z - 2f * scale.Value.z), scale.Value);
+                    SpawnCell(entityInQueryIndex, entity, commandBuffer, new float3(translation.Value.x - 2f * scale.Value.x, translation.Value.y, translation.Value.z - 2f * scale.Value.z), scale.Value);
+                    SpawnCell(entityInQueryIndex, entity, commandBuffer, new float3(translation.Value.x - 2f * scale.Value.x, translation.Value.y, translation.Value.z), scale.Value);
                 })
                 .WithBurst()
                 .WithName("SplitCells")

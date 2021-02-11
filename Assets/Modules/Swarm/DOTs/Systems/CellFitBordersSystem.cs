@@ -38,10 +38,10 @@ namespace Simulation.Modules
                     {
                         commandBuffer.AddComponent<DeleteTag>(entityInQueryIndex, entity);
                     }
-                    // ячейка выступает за границу частично - разделить если позволяет размер, иначе удалить
+                    // ячейка выступает за границу частично - пометить на разделение если позволяет размер, иначе - на удаление
                     else if (cell.Borders.x < borders.x || cell.Borders.y > borders.y || cell.Borders.z < borders.z || cell.Borders.w > borders.w)
                     {
-                        if (scale.Value.x < 0.05f)
+                        if (scale.Value.x < 0.1f)
                         {
                             commandBuffer.AddComponent<DeleteTag>(entityInQueryIndex, entity);
                         }

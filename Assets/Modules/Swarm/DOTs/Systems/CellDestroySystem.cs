@@ -14,9 +14,6 @@ namespace Simulation.Modules
     [BurstCompile]
     public class CellDestroySystem : JobComponentSystem
     {
-        // x,y,z,w => left, right, bottom, top
-        public float4 Borders;
-
         private EndSimulationEntityCommandBufferSystem commandBufferSystem;
 
         protected override void OnCreate()
@@ -28,15 +25,14 @@ namespace Simulation.Modules
         protected override JobHandle OnUpdate(JobHandle inputDeps)
         {
             // delete job
-            var borders = Borders;
             var commandBuffer = commandBufferSystem.CreateCommandBuffer().ToConcurrent();
 
-            var deleteHandle = Entities.WithAll<DeleteTag>().ForEach((int entityInQueryIndex, Entity entity, in NonUniformScale scale, in Translation translation) =>
+            var deleteHandle = Entities.WithAll<DeleteTag>().ForEach((int entityInQueryIndex, Entity entity) =>
                 {
                     commandBuffer.DestroyEntity(entityInQueryIndex, entity);
                 })
                 .WithBurst()
-                .WithName("DestoyCells")
+                .WithName("DestroyEntities")
                 .Schedule(inputDeps);
 
             commandBufferSystem.AddJobHandleForProducer(deleteHandle);

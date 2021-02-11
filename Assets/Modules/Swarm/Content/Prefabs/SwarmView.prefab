@@ -43,7 +43,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e652016be8b6fb41bf1a0f99106f6dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _unitPrefab: {fileID: 6417277496535045706, guid: 3eb343388abdafc4498d98a182095231,
+  _unitPrefabRed: {fileID: 4578847396395205755, guid: 07023c1696321024693a218274573014,
+    type: 3}
+  _unitPrefabBlue: {fileID: 4967482293724066051, guid: e7b10c9bfd48c9042bf3d6d537ec3e3a,
     type: 3}
   _cellPrefab: {fileID: 303169304490248332, guid: f8da37f1946f68b41a89d13d9d20d500,
     type: 3}

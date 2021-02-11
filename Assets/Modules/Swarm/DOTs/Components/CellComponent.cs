@@ -6,6 +6,7 @@ namespace Simulation.Modules
     [GenerateAuthoringComponent]
     public struct CellComponent : IComponentData
     {
+        // x,y,z,w => left, right, bottom, top
         public float4 Borders;
 
         public CellComponent(float4 borders)
@@ -13,13 +14,13 @@ namespace Simulation.Modules
             Borders = borders;
         }
 
-        public CellComponent(float3 posiiton, float3 scale)
+        public CellComponent(float3 position, float3 scale)
         {
             Borders = new float4(
-                posiiton.x - scale.x,
-                posiiton.x + scale.x,
-                posiiton.y - scale.y,
-                posiiton.y + scale.y);
+                position.x - scale.x,
+                position.x + scale.x,
+                position.z - scale.z,
+                position.z + scale.z);
         }
     }
 }
